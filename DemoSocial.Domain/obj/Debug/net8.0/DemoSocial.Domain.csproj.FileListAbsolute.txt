@@ -6,6 +6,7 @@ C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Domain\obj\Debug\
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Domain\obj\Debug\net8.0\DemoSocial.Domain.AssemblyInfoInputs.cache
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Domain\obj\Debug\net8.0\DemoSocial.Domain.AssemblyInfo.cs
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Domain\obj\Debug\net8.0\DemoSocial.Domain.csproj.CoreCompileInputs.cache
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Domain\obj\Debug\net8.0\DemoSocial.Domain.sourcelink.json
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Domain\obj\Debug\net8.0\DemoSocial.Domain.dll
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Domain\obj\Debug\net8.0\refint\DemoSocial.Domain.dll
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Domain\obj\Debug\net8.0\DemoSocial.Domain.pdb

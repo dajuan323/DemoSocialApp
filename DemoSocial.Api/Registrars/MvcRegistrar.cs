@@ -28,7 +28,7 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
             opt.SubstituteApiVersionInUrl = true;
         });
 
-       
+        
 
         builder.Services.AddEndpointsApiExplorer();
     }

@@ -9,6 +9,7 @@ C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\D
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.AssemblyInfoInputs.cache
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.AssemblyInfo.cs
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.csproj.CoreCompileInputs.cache
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.sourcelink.json
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.csproj.CopyComplete
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.dll
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\refint\DemoSocial.Persistence.dll

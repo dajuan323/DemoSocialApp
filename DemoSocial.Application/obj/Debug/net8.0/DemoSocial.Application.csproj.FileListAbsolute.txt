@@ -10,6 +10,7 @@ C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Application\obj\D
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Application\obj\Debug\net8.0\DemoSocial.Application.AssemblyInfoInputs.cache
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Application\obj\Debug\net8.0\DemoSocial.Application.AssemblyInfo.cs
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Application\obj\Debug\net8.0\DemoSocial.Application.csproj.CoreCompileInputs.cache
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Application\obj\Debug\net8.0\DemoSocial.Application.sourcelink.json
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Application\obj\Debug\net8.0\DemoSocial.Application.csproj.CopyComplete
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Application\obj\Debug\net8.0\DemoSocial.Application.dll
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Application\obj\Debug\net8.0\refint\DemoSocial.Application.dll

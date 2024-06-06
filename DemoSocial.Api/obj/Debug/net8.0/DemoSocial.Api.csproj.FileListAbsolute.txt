@@ -140,6 +140,7 @@ C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Api\obj\Debug\net
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Api\obj\Debug\net8.0\DemoSocial.Api.csproj.CoreCompileInputs.cache
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Api\obj\Debug\net8.0\DemoSocial.Api.MvcApplicationPartsAssemblyInfo.cs
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Api\obj\Debug\net8.0\DemoSocial.Api.MvcApplicationPartsAssemblyInfo.cache
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Api\obj\Debug\net8.0\DemoSocial.Api.sourcelink.json
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Api\obj\Debug\net8.0\staticwebassets.build.json
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Api\obj\Debug\net8.0\staticwebassets.development.json
 C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Api\obj\Debug\net8.0\staticwebassets\msbuild.DemoSocial.Api.Microsoft.AspNetCore.StaticWebAssets.props
