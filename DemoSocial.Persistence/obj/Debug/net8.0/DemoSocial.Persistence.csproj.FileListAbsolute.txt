@@ -1,0 +1,17 @@
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\bin\Debug\net8.0\DemoSocial.Persistence.deps.json
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\bin\Debug\net8.0\DemoSocial.Persistence.runtimeconfig.json
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\bin\Debug\net8.0\DemoSocial.Persistence.dll
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\bin\Debug\net8.0\DemoSocial.Persistence.pdb
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\bin\Debug\net8.0\DemoSocial.Domain.dll
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\bin\Debug\net8.0\DemoSocial.Domain.pdb
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.csproj.AssemblyReference.cache
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.AssemblyInfoInputs.cache
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.AssemblyInfo.cs
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.csproj.CoreCompileInputs.cache
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.csproj.CopyComplete
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.dll
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\refint\DemoSocial.Persistence.dll
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.pdb
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\DemoSocial.Persistence.genruntimeconfig.cache
+C:\training\dotnet\APIs\DemoSocialApp\DemoSocialApp\DemoSocial.Persistence\obj\Debug\net8.0\ref\DemoSocial.Persistence.dll
