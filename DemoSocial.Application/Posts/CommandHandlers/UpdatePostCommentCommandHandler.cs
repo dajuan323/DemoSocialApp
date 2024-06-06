@@ -22,51 +22,36 @@ internal class UpdatePostCommentCommandHandler(DataContext context) : IRequestHa
 
 		try
 		{
-			var post = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == request.PostId);
-			if (post is null)
+			var postComment = await _context.Posts
+				.Where(p=>p.PostId == request.PostId)
+				.SelectMany(p => p.Comments)
+				.FirstOrDefaultAsync(pc => pc.CommentId == request.PostCommentId);
+			//if (post is null)
+			//{
+			//	result.IsError = true;
+			//	var error = new Error 
+			//	{ 
+			//		Code = ErrorCode.NotFound, 
+			//		Message = $"No post found with Id {request.PostId}" 
+			//	};
+			//	result.Errors.Add(error);
+			//	return result;
+			//}
+   //         var postComment = post.Sel
+			if(postComment is null)
 			{
 				result.IsError = true;
-				var error = new Error 
-				{ 
-					Code = ErrorCode.NotFound, 
-					Message = $"No post found with Id {request.PostId}" 
-				};
-				result.Errors.Add(error);
+                var error = new Error
+                {
+                    Code = ErrorCode.NotFound,
+                    Message = $"No post comment found with Id {request.PostCommentId}"
+                };
+                result.Errors.Add(error);
 				return result;
 			}
-			else
-			{
-				var postComment = post.Comments.FirstOrDefault(pc => pc.CommentId == request.PostCommentId);
-                if (postComment is null)
-                {
-                    result.IsError = true;
-                    var error = new Error
-                    {
-                        Code = ErrorCode.NotFound,
-                        Message = $"No post comment found with Id {request.PostCommentId}"
-                    };
-                    result.Errors.Add(error);
-                    return result;
-                }
-                postComment.UpdatePostComment(request.UpdatedText);
-                await _context.SaveChangesAsync();
-                result.Payload = postComment;
-            }
-            //var postComment = await post.Comments.FirstOrDefaultAsync(pc => pc.CommentId == request.PostCommentId).FirstOrDefault();
-            //if(postComment is null)
-            //{
-            //	result.IsError = true;
-            //             var error = new Error
-            //             {
-            //                 Code = ErrorCode.NotFound,
-            //                 Message = $"No post comment found with Id {request.PostCommentId}"
-            //             };
-            //             result.Errors.Add(error);
-            //	return result;
-            //}
-            //postComment.UpdatePostComment(request.UpdatedText);
-            //await _context.SaveChangesAsync();
-            //result.Payload = postComment;
+			postComment.UpdatePostComment(request.UpdatedText);
+			await _context.SaveChangesAsync();
+			result.Payload = postComment;
 
         }
 		catch (Exception)
