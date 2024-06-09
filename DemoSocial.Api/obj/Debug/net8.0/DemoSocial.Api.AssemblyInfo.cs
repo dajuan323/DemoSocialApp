@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DemoSocial.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3da5d47166cb59aef85673f66e0a5d391476d00b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3f0e3ce2e866fc3f15fd6a4f6626ac73127df1b2")]
 [assembly: System.Reflection.AssemblyProductAttribute("DemoSocial.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DemoSocial.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
