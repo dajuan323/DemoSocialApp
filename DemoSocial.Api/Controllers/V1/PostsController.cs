@@ -33,11 +33,11 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
 
     [HttpGet]
     [Route(template:ApiRoutes.Posts.IdRoute)]
-    [ValidateGuid(key:"id")]
-    public async Task<IActionResult> GetById(string id)
+    [ValidateGuid("postId")]
+    public async Task<IActionResult> GetById(string postId)
     {
-        var postId = Guid.Parse(id);
-        var query = new GetPostByIdQuery(postId);
+        var parsedPostId = Guid.Parse(postId);
+        var query = new GetPostByIdQuery(parsedPostId);
         var result = await _mediator.Send(query);
         var mapped = _mapper.Map<PostResponse>(result.Payload);
 
@@ -59,13 +59,13 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
 
     [HttpPatch]
     [Route(ApiRoutes.Posts.IdRoute)]
-    [ValidateGuid(key:"id")]
+    [ValidateGuid("postId")]
     [ValidateModel]
-    public async Task<IActionResult> UpdatePost([FromBody] PostUpdate updatedPost, string id)
+    public async Task<IActionResult> UpdatePost([FromBody] PostUpdate updatedPost, string postId)
     {
         var command = new UpdatePostTextCommand
         (
-            PostId : Guid.Parse(id),
+            PostId : Guid.Parse(postId),
             NewText : updatedPost.Text
         );
         var result = await _mediator.Send(command);
@@ -75,17 +75,17 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
 
     [HttpDelete]
     [Route(template:ApiRoutes.Posts.IdRoute)]
-    [ValidateGuid(key:"id")]
-    public async Task<IActionResult> DeletePost(string id)
+    [ValidateGuid("postId")]
+    public async Task<IActionResult> DeletePost(string postId)
     {
-        var command = new DeletePostCommand(Guid.Parse(id));
+        var command = new DeletePostCommand(Guid.Parse(postId));
         var result = await _mediator.Send(command);
         return result.IsError ? HandleErrorResponse(result.Errors) : NoContent();
     }
 
     [HttpGet]
     [Route(template:ApiRoutes.Posts.PostComments)]
-    [ValidateGuid(key:"postId")]
+    [ValidateGuid("postId")]
     public async Task<IActionResult> GetPostComments(string postId)
     {
         var query = new GetAllPostCommentsQuery(Guid.Parse(postId));
@@ -99,7 +99,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
 
     [HttpPost]
     [Route(template:ApiRoutes.Posts.PostComments)]
-    [ValidateGuid(key:"postId")]
+    [ValidateGuid("postId")]
     [ValidateModel]
     public async Task<IActionResult> AddcommentToPost(string postId, [FromBody] PostCommentCreate  postComment)
     {
@@ -136,8 +136,8 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
 
     [HttpPatch]
     [Route(template:ApiRoutes.Posts.CommentById)]
-    [ValidateGuid(key:"postId")]
-    [ValidateGuid(key:"commentId")]
+    [ValidateGuid("postId")]
+    [ValidateGuid("commentId")]
     [ValidateModel]
     public async Task<IActionResult> UpdatePostComment(string postId, string commentId, [FromBody] PostCommentUpdate updatedComment)
     {
