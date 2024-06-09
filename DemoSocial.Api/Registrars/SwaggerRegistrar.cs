@@ -9,7 +9,7 @@ namespace DemoSocial.Api.Registrars
         {
             builder.Services.AddSwaggerGen();
 
-            builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
+            builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
             
         }

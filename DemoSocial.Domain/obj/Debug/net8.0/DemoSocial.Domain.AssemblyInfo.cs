@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DemoSocial.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3da5d47166cb59aef85673f66e0a5d391476d00b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b0f9325ee8a3949548549b7edf9f3c536a5c0059")]
 [assembly: System.Reflection.AssemblyProductAttribute("DemoSocial.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DemoSocial.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

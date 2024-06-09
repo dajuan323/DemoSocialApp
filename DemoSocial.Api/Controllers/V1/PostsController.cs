@@ -1,5 +1,4 @@
-﻿using Asp.Versioning;
-using AutoMapper;
+﻿using AutoMapper;
 using DemoSocial.Api.Contracts.Common;
 using DemoSocial.Api.Contracts.Post.Requests;
 using DemoSocial.Api.Contracts.Post.Responses;
@@ -7,7 +6,7 @@ using DemoSocial.Api.Filters;
 using DemoSocial.Application.Posts.Commands;
 using DemoSocial.Application.Posts.Queries;
 using DemoSocial.Domain.Aggregates.PostAggregate;
-using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoSocial.Api.Controllers.V1;
@@ -22,6 +21,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
 
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAllPosts()
     {
         var result = await _mediator.Send(new GetAllPostsQuery());
