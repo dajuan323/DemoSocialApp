@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DemoSocial.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7aef69618c09400fcbdef2ab701cc261dc98f527")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32b340b4cbcf1e816956ac6b858efd24f5f95fa1")]
 [assembly: System.Reflection.AssemblyProductAttribute("DemoSocial.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DemoSocial.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
