@@ -21,7 +21,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
 
 
     [HttpGet]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> GetAllPosts()
     {
         var result = await _mediator.Send(new GetAllPostsQuery());

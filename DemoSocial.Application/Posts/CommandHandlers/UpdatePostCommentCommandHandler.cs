@@ -2,6 +2,7 @@
 using DemoSocial.Application.Models;
 using DemoSocial.Application.Posts.Commands;
 using DemoSocial.Domain.Aggregates.PostAggregate;
+using DemoSocial.Domain.Exceptions;
 using DemoSocial.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,23 +23,21 @@ internal class UpdatePostCommentCommandHandler(DataContext context) : IRequestHa
 
 		try
 		{
-			var postComment = await _context.Posts
-				.Where(p=>p.PostId == request.PostId)
-				.SelectMany(p => p.Comments)
-				.FirstOrDefaultAsync(pc => pc.CommentId == request.PostCommentId);
-			//if (post is null)
-			//{
-			//	result.IsError = true;
-			//	var error = new Error 
-			//	{ 
-			//		Code = ErrorCode.NotFound, 
-			//		Message = $"No post found with Id {request.PostId}" 
-			//	};
-			//	result.Errors.Add(error);
-			//	return result;
-			//}
-   //         var postComment = post.Sel
-			if(postComment is null)
+			var post = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == request.PostId);
+
+			if (post is null)
+			{
+				result.IsError = true;
+				var error = new Error
+				{
+					Code = ErrorCode.NotFound,
+					Message = $"No post found with Id {request.PostId}"
+				};
+				result.Errors.Add(error);
+				return result;
+			}
+			var postComment = post.Comments.FirstOrDefault(pc => pc.CommentId == request.PostCommentId);
+			if (postComment is null)
 			{
 				result.IsError = true;
                 var error = new Error
@@ -54,11 +53,30 @@ internal class UpdatePostCommentCommandHandler(DataContext context) : IRequestHa
 			result.Payload = postComment;
 
         }
-		catch (Exception)
-		{
 
-			throw;
-		}
-		return result;
+        catch(PostCommentNotValidException ex)
+        {
+            result.IsError = true;
+            ex.ValidationErrors.ForEach(e =>
+            {
+                Error error = new()
+                {
+                    Code = ErrorCode.ValidationError,
+                    Message = $"{ex.Message}"
+                };
+                result.Errors.Add(error);
+            });
+        }
+        catch (Exception e)
+        {
+            Error error = new()
+            {
+                Code = ErrorCode.UnknownError,
+                Message = $"{e.Message}"
+            };
+            result.IsError = true;
+            result.Errors.Add(error);
+        }
+        return result;
     }
 }

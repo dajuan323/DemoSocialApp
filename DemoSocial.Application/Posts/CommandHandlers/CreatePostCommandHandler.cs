@@ -1,18 +1,4 @@
-﻿using DemoSocial.Application.Enums;
-using DemoSocial.Application.Models;
-using DemoSocial.Application.Posts.Commands;
-using DemoSocial.Domain.Aggregates.PostAggregate;
-using DemoSocial.Domain.Exceptions;
-using DemoSocial.Persistence;
-using MediatR;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DemoSocial.Application.Posts.CommandHandlers;
+﻿namespace DemoSocial.Application.Posts.CommandHandlers;
 
 internal class CreatePostCommandHandler(DataContext context) : IRequestHandler<CreatePostCommand, OperationResult<Post>>
 {
