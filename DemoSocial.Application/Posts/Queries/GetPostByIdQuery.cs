@@ -1,6 +1,6 @@
-﻿using DemoSocial.Application.Models;
-using DemoSocial.Domain.Aggregates.PostAggregate;
+﻿using DemoSocial.Domain.Aggregates.PostAggregate;
 using MediatR;
+using SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

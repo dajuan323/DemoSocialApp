@@ -1,9 +1,4 @@
-﻿
-using Asp.Versioning.Builder;
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
-
-namespace DemoSocial.Api.Registrars;
+﻿namespace DemoSocial.Api.Registrars;
 
 public class MvcWebAppRegistrar : IWebApplicationRegistrar
 {
@@ -13,17 +8,20 @@ public class MvcWebAppRegistrar : IWebApplicationRegistrar
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            IReadOnlyList<ApiVersionDescription> descriptions = app.DescribeApiVersions();
+            var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
-            foreach (ApiVersionDescription description in descriptions)
+            foreach (var description in provider.ApiVersionDescriptions)
             {
-                string url = $"/swagger/{description.GroupName}/swagger.json";
-                string name = description.GroupName.ToUpperInvariant();
-
-                options.SwaggerEndpoint(url, name);
+                options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                    description.ApiVersion.ToString());
             }
         });
+
+        app.UseCors("DemoSocialPolicy");
+
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

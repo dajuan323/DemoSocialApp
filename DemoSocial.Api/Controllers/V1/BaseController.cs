@@ -1,8 +1,7 @@
 ﻿using Azure;
 using DemoSocial.Api.Contracts.Common;
-using DemoSocial.Application.Enums;
-using DemoSocial.Application.Models;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel;
 
 namespace DemoSocial.Api.Controllers.V1;
 
@@ -25,10 +24,11 @@ public class BaseController : ControllerBase
         }
 
 
-        apiError.StatusCode = 500;
-        apiError.StatusPhrase = "Internal server error";
+        apiError.StatusCode = 400;
+        apiError.StatusPhrase = "Bad Request";
         apiError.Timestamp = DateTime.Now;
         apiError.Errors.Add("Unknown Error");
+        errors.ForEach(e => apiError.Errors.Add(e.Message));
         return StatusCode(500, apiError);
         
 

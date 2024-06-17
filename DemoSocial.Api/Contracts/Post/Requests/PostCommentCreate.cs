@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DemoSocial.Api.Contracts.Post.Requests;
+﻿namespace DemoSocial.Api.Contracts.Post.Requests;
 
 public record PostCommentCreate
 {

@@ -24,8 +24,9 @@ public class BasicInfoValidator : AbstractValidator<BasicInfo>
             .NotNull().WithMessage("Email required...")
             .EmailAddress().WithMessage("Provided string is not a currect email address format");
         //RuleFor(info => info.DateOfBirth)
-        //    .GreaterThanOrEqualTo(DateTime.Today.AddYears(-18))
-        //    .WithMessage("Must be 18 years of age.");
+        //    .InclusiveBetween(new DateTime(DateTime.Now.AddYears(-125).Ticks), 
+        //         new DateTime(DateTime.Now.AddYears(-18).Ticks))
+        //    .WithMessage("Age needs to be between 18 and 125");
 
     }
 }

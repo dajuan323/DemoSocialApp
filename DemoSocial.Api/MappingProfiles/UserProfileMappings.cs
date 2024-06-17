@@ -1,10 +1,4 @@
-﻿using AutoMapper;
-using DemoSocial.Api.Contracts.UserProfile.Requests;
-using DemoSocial.Api.Contracts.UserProfile.Responses;
-using DemoSocial.Application.UserProfiles.Commands;
-using DemoSocial.Domain.Aggregates.UserProfileAggregate;
-
-namespace DemoSocial.Api.MappingProfiles;
+﻿namespace DemoSocial.Api.MappingProfiles;
 
 public class UserProfileMappings : Profile
 {

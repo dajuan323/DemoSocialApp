@@ -7,9 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Identity\**" />
-    <EmbeddedResource Remove="Identity\**" />
-    <None Remove="Identity\**" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +19,13 @@
   <ItemGroup>
     <ProjectReference Include="..\DemoSocial.Domain\DemoSocial.Domain.csproj" />
     <ProjectReference Include="..\DemoSocial.Persistence\DemoSocial.Persistence.csproj" />
+    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Abstractions\" />
+    <Folder Include="Enums\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

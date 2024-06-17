@@ -1,6 +1,6 @@
-﻿using DemoSocial.Application.Models;
-using DemoSocial.Domain.Aggregates.UserProfileAggregate;
+﻿using DemoSocial.Domain.Aggregates.UserProfileAggregate;
 using MediatR;
+using SharedKernel;
 
 
 namespace DemoSocial.Application.UserProfiles.Commands;

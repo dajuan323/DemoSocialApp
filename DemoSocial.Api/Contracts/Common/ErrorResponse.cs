@@ -1,6 +1,6 @@
 ﻿namespace DemoSocial.Api.Contracts.Common;
 
-public class ErrorResponse
+public record ErrorResponse
 {
     public int StatusCode { get; set; }
     public string StatusPhrase { get; set; }

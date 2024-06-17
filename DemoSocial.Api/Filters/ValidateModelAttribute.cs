@@ -1,9 +1,4 @@
-﻿using DemoSocial.Api.Contracts.Common;
-using DemoSocial.Application.Enums;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace DemoSocial.Api.Filters;
+﻿namespace DemoSocial.Api.Filters;
 
 public class ValidateModelAttribute : ActionFilterAttribute
 {
@@ -19,17 +14,12 @@ public class ValidateModelAttribute : ActionFilterAttribute
             };
             var errors = context.ModelState.AsEnumerable();
 
-            foreach (var error in errors)
-            {
-                foreach (var innerValue in error.Value.Errors)
-                {
-                    apiError.Errors.Add(innerValue.ErrorMessage);
-                }
-            }
+            apiError.Errors.AddRange(errors
+                .SelectMany(error => error.Value.Errors)
+                .Select(innerValue => innerValue.ErrorMessage));
 
             context.Result = new BadRequestObjectResult(apiError);
 
-            // TO DO: Make sure Asp.NET Core doesnt override action result body
         }
     }
 }

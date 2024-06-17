@@ -2,7 +2,7 @@
 
 namespace DemoSocial.Api.Contracts.UserProfile.Responses;
 
-public sealed record UserProfileResponse
+public record UserProfileResponse
 {
     public Guid UserProfileId { get; set; }
     public BasicInfo BasicInfo { get; set; }

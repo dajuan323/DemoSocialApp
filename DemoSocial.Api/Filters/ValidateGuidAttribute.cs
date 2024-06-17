@@ -1,8 +1,4 @@
-﻿using DemoSocial.Api.Contracts.Common;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace DemoSocial.Api.Filters;
+﻿namespace DemoSocial.Api.Filters;
 
 public class ValidateGuidAttribute : ActionFilterAttribute
 {

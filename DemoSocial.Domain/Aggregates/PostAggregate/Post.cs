@@ -1,14 +1,4 @@
-﻿using DemoSocial.Domain.Aggregates.UserProfileAggregate;
-using DemoSocial.Domain.Exceptions;
-using DemoSocial.Domain.Validators.PostValidators;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DemoSocial.Domain.Aggregates.PostAggregate;
+﻿namespace DemoSocial.Domain.Aggregates.PostAggregate;
 
 public class Post
 {

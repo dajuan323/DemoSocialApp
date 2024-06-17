@@ -1,27 +1,21 @@
-﻿using Asp.Versioning;
-using AutoMapper;
-using DemoSocial.Api.Contracts.Common;
-using DemoSocial.Api.Contracts.Post.Requests;
-using DemoSocial.Api.Contracts.Post.Responses;
-using DemoSocial.Api.Filters;
-using DemoSocial.Application.Posts.Commands;
-using DemoSocial.Application.Posts.Queries;
-using DemoSocial.Domain.Aggregates.PostAggregate;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-
-namespace DemoSocial.Api.Controllers.V1;
+﻿namespace DemoSocial.Api.Controllers.V1;
 
 [ApiVersion("1.0")]
 [Route(ApiRoutes.BaseRoute)]
 [ApiController]
-public class PostsController(IMediator mediator, IMapper mapper) : BaseController
+public class PostsController : BaseController
 {
-    private readonly IMediator _mediator = mediator;
-    private readonly IMapper _mapper = mapper;
+    private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
+    public PostsController(IMediator mediator, IMapper mapper)
+    {
+        _mediator = mediator;
+        _mapper = mapper;
+    }
 
     [HttpGet]
+    //[Authorize]
     public async Task<IActionResult> GetAllPosts()
     {
         var result = await _mediator.Send(new GetAllPostsQuery());
@@ -61,12 +55,13 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
     [Route(ApiRoutes.Posts.IdRoute)]
     [ValidateGuid("postId")]
     [ValidateModel]
-    public async Task<IActionResult> UpdatePost([FromBody] PostUpdate updatedPost, string postId)
+    public async Task<IActionResult> UpdatePost([FromBody] PostUpdate updatedPost, string postId, string profileId)
     {
         var command = new UpdatePostTextCommand
         (
             PostId : Guid.Parse(postId),
-            NewText : updatedPost.Text
+            NewText : updatedPost.Text,
+            UserProfileId : Guid.Parse(profileId)
         );
         var result = await _mediator.Send(command);
 
@@ -106,16 +101,15 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
         var IsValidGuid = Guid.TryParse(postComment.UserProfileId, out var userProfileId);
         if (!IsValidGuid)
         {
-                var apiError = new ErrorResponse();
+            ErrorResponse apiError = new()
+            {
+                StatusCode = 404,
+                StatusPhrase = "Bad Request",
+                Timestamp = DateTime.Now,
+                Errors = ["Provided user profile id is not in valid GUID format."]
+            };
 
-
-                apiError.StatusCode = 404;
-                apiError.StatusPhrase = "Bad Request";
-                apiError.Timestamp = DateTime.Now;
-                apiError.Errors.Add("Provided user profile id is not in valid GUID format.");
-
-                return NotFound(apiError);
-            
+            return NotFound(apiError);            
         }
 
         var command = new AddCommentToPostCommand
@@ -151,4 +145,14 @@ public class PostsController(IMediator mediator, IMapper mapper) : BaseControlle
 
         return result.IsError ? HandleErrorResponse(result.Errors) : NoContent();
     }
+
+    //[HttpDelete]
+    //[Route(template: ApiRoutes.Posts.CommentById)]
+    //[ValidateGuid("postId")]
+    //[ValidateGuid("commentId")]
+    //public async Task<IActionResult> DeletePostComment(string postId, string commentId)
+    //{
+    //     var userProfileId = HttpContext.getu
+
+    //}
 }
