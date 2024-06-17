@@ -1,6 +1,6 @@
-﻿using DemoSocial.Application.Models;
-using DemoSocial.Domain.Aggregates.UserProfileAggregate;
+﻿using DemoSocial.Domain.Aggregates.UserProfileAggregate;
 using MediatR;
+using SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 
 namespace DemoSocial.Application.UserProfiles.Queries;
 
-public class GetAllUserProfiles : IRequest<OperationResult<IEnumerable<UserProfile>>>
+public sealed record GetAllUserProfiles : IRequest<OperationResult<IEnumerable<UserProfile>>>
 {
 }

@@ -1,6 +1,6 @@
-﻿using DemoSocial.Application.Models;
-using DemoSocial.Domain.Aggregates.PostAggregate;
+﻿using DemoSocial.Domain.Aggregates.PostAggregate;
 using MediatR;
+using SharedKernel;
 
 namespace DemoSocial.Application.Posts.Commands;
 

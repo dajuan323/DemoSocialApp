@@ -1,4 +1,6 @@
-﻿namespace DemoSocial.Application.Identity.Commands;
+﻿using SharedKernel;
+
+namespace DemoSocial.Application.Identity.Commands;
 
 public sealed record RegisterIdentityUserCommand(
     string Username,

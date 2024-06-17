@@ -1,10 +1,9 @@
-﻿using DemoSocial.Application.Enums;
-using DemoSocial.Application.Models;
-using DemoSocial.Application.Posts.Queries;
+﻿using DemoSocial.Application.Posts.Queries;
 using DemoSocial.Domain.Aggregates.PostAggregate;
 using DemoSocial.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +15,8 @@ namespace DemoSocial.Application.Posts.QueryHandlers;
 internal class GetAllPostCommentsQueryHandler(DataContext context) : IRequestHandler<GetAllPostCommentsQuery, OperationResult<List<PostComment>>>
 {
     private readonly DataContext _context = context;
+    private OperationResult<List<PostComment>> _result = new();
+    private readonly PostErrorMessages _errorMessages = new();
     public async Task<OperationResult<List<PostComment>>> Handle(GetAllPostCommentsQuery request, CancellationToken cancellationToken)
     {
         OperationResult<List<PostComment>> result = new();
@@ -26,28 +27,13 @@ internal class GetAllPostCommentsQueryHandler(DataContext context) : IRequestHan
                 .FirstOrDefaultAsync(p => p.PostId == request.PostId);
 
             if (post is null)
-            {
-                result.IsError = true;
-                var error = new Error
-                {
-                    Code = ErrorCode.NotFound,
-                    Message = $"No post found with Id {request.PostId}"
-                };
-                result.Errors.Add(error);
-                return result;
-            }
+                _result.AddError(ErrorCode.NotFound,  "Posts not found");
 
             result.Payload = post.Comments.ToList();
 		}
         catch (Exception e)
         {
-            Error error = new()
-            {
-                Code = ErrorCode.UnknownError,
-                Message = $"{e.Message}"
-            };
-            result.IsError = true;
-            result.Errors.Add(error);
+            _result.AddUnknownError($"{e.Message}");
         }
 
         return result;

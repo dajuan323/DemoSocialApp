@@ -1,46 +1,33 @@
-﻿namespace DemoSocial.Application.Posts.CommandHandlers;
+﻿using SharedKernel;
+
+namespace DemoSocial.Application.Posts.CommandHandlers;
 
 internal class CreatePostCommandHandler(DataContext context) : IRequestHandler<CreatePostCommand, OperationResult<Post>>
 {
     private readonly DataContext _context = context;
+    private OperationResult<Post> _result = new();
     public async Task<OperationResult<Post>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
-        OperationResult<Post> result = new();
-
-
         try
         {
-            var post = Post.CreatePost(request.UserProfileId, request.TextContent);
+            var post = Post.CreatePost(
+                request.UserProfileId, request.TextContent);
             _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
-            result.Payload = post;
+            _result.Payload = post;
         }
 
         catch (PostNotValidException ex)
         {
-            result.IsError = true;
-            ex.ValidationErrors.ForEach(e =>
-            {
-                Error error = new()
-                {
-                    Code = ErrorCode.ValidationError,
-                    Message = $"{ex.Message}"
-                };
-                result.Errors.Add(error);
-            });
+            ex.ValidationErrors.ForEach(e => _result.AddError(
+                ErrorCode.ValidationError, $"{ex.Message}"));
         }
 
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Error error = new()
-            {
-                Code = ErrorCode.UnknownError,
-                Message = $"{e.Message}"
-            };
-            result.IsError = true;
-            result.Errors.Add(error);
+                _result.AddUnknownError($"{ex.Message}");
         }
-        return result;
+        return _result;
     }
 }

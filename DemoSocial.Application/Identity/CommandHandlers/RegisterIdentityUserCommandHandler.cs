@@ -1,56 +1,91 @@
-﻿namespace DemoSocial.Application.Identity.CommandHandlers;
+﻿using DemoSocial.Application.Services;
+using Microsoft.EntityFrameworkCore.Storage;
 
-internal class RegisterIdentityUserCommandHandler : BaseCommandHandler, IRequestHandler<RegisterIdentityUserCommand, OperationResult<string>>
+
+namespace DemoSocial.Application.Identity.CommandHandlers;
+
+internal class RegisterIdentityUserCommandHandler : IRequestHandler<RegisterIdentityUserCommand, OperationResult<string>>
 {
     private readonly DataContext _context;
     private readonly UserManager<IdentityUser> _userManager;
-    private readonly JwtSettings _jwtSettings;
+    private readonly IdentityService _identityService;
+    private OperationResult<string> _result = new();
+    private readonly IdentityErrorMessages _errorMessages = new();
 
-    public RegisterIdentityUserCommandHandler(DataContext context, UserManager<IdentityUser> userManager, JwtSettings jwtSettings)
+    public RegisterIdentityUserCommandHandler(
+        DataContext context, UserManager<IdentityUser> userManager, IdentityService identityService)
     {
         _context = context;
         _userManager = userManager;
-        _jwtSettings = jwtSettings;
+        _identityService = identityService;
     }
 
     public async Task<OperationResult<string>> Handle(RegisterIdentityUserCommand request, CancellationToken cancellationToken)
     {
-        OperationResult<string> result = new();
         try
         {
-            var existingIdentity = await _userManager.FindByEmailAsync(request.Username);
+            await ValidateIdentityDoesNotExist(request);
+            if (_result.IsError) return _result;
 
-            if (existingIdentity is null)
-            {                
-                ElxceptionErrorHandler(
-                        result, 
-                        ErrorCode.IdentityUserAlreadyExists,
-                        $"Provided email address already exists.  Cannot register new user."
-                    );
-            }
+            await using var transaction = _context.Database.BeginTransaction();
 
-            IdentityUser identity = new()
-            {
-                Email = request.Username,
-                UserName = request.Username,
-            };
+            var identity = await CreateIdentityUserAsync(request, transaction, cancellationToken);
+            if (_result.IsError) return _result;
 
+            var profile = await CreateUserProfileAsync(identity, request, transaction, cancellationToken);
+            if (_result.IsError) return _result;
 
-            using var transaction = _context.Database.BeginTransaction();
-            var createdIdentity = await _userManager.CreateAsync(existingIdentity, request.Password);
-            if (!createdIdentity.Succeeded)
-            {
-                await transaction.RollbackAsync();
-                foreach (var identityError in createdIdentity.Errors)
-                {
-                    ElxceptionErrorHandler(
-                    result,
-                    ErrorCode.IdentityCreationFailed,
-                    identityError.Description);
-                }
+            await transaction.CommitAsync(cancellationToken);
 
-            }
+            _result.Payload = GetJwtString(identity, profile);
+            return _result;
+        }
 
+        catch (UserProfileNotValidException ex)
+        {
+            ex.ValidationErrors.ForEach(e => _result.AddError(ErrorCode.ValidationError, $"{ex.Message}"));
+        }
+        catch (Exception e)
+        {
+            _result.AddUnknownError($"{e.Message}");
+        }
+        return _result;
+    }
+
+    private async Task ValidateIdentityDoesNotExist(RegisterIdentityUserCommand request)
+    {
+        IdentityUser existingIdentity = await _userManager.FindByEmailAsync(request.Username);
+
+        if (existingIdentity is not null)
+        {
+            _result.AddError(ErrorCode.NotFound, _errorMessages.IdentityUserAlreadyExists);
+
+        }
+
+        
+    }
+
+    private async Task<IdentityUser> CreateIdentityUserAsync( 
+        RegisterIdentityUserCommand request, IDbContextTransaction transaction, CancellationToken cancellationToken)
+    {
+        var newIdentity = new IdentityUser(){ Email = request.Username, UserName = request.Username};
+        var createdIdentityUser = await _userManager.CreateAsync(newIdentity, request.Password);
+        if (!createdIdentityUser.Succeeded)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+
+            foreach (var identityError in createdIdentityUser.Errors)
+                _result.AddError(ErrorCode.IdentityCreationFailed, identityError.Description);
+            
+        }
+        return newIdentity;
+    }
+
+    private async Task<UserProfile> CreateUserProfileAsync(IdentityUser identity,
+        RegisterIdentityUserCommand request, IDbContextTransaction transaction, CancellationToken cancellationToken)
+    {
+        try
+        {
             var profileInfo = BasicInfo.CreateBasicInfo(
                 request.FirstName,
                 request.LastName,
@@ -60,57 +95,30 @@ internal class RegisterIdentityUserCommandHandler : BaseCommandHandler, IRequest
                 request.CurrentCity);
 
             var profile = UserProfile.CreateUserProfile(identity.Id, profileInfo);
-
-            try
-            {
-                _context.UserProfiles.Add(profile);
-
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                
-            }
-            catch (Exception)
-            {
-                await transaction.RollbackAsync( );
-                throw;
-            }
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            byte[] key = Encoding.UTF8.GetBytes(_jwtSettings.SigningKey);
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(type: JwtRegisteredClaimNames.Sub, value: identity.Email),
-                    new Claim(type: JwtRegisteredClaimNames.Jti, value: Guid.NewGuid().ToString(ToString())),
-                    new Claim(type: JwtRegisteredClaimNames.Email, value: identity.Email),
-                    new Claim(type: "IdentityId", value: identity.Id),
-                    new Claim(type: "UserProfileId", value: profile.UserProfileId.ToString())
-                }),
-                Expires = DateTime.Now.AddHours(2),
-                Audience = _jwtSettings.Audiences[0],
-                Issuer = _jwtSettings.Issuer,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            result.Payload  = tokenHandler.WriteToken(token);
-            return result;
+         
+            _context.UserProfiles.Add(profile);
+            await _context.SaveChangesAsync(cancellationToken);
+            return profile;
         }
-        
-        catch (UserProfileNotValidException ex)
+        catch (Exception)
         {
-            ElxceptionErrorHandler(result, ErrorCode.ValidationError, $"{ex.Message}" );
+            await transaction.RollbackAsync();
+            throw;
         }
-        catch (Exception e)
-        {          
-            ElxceptionErrorHandler(result, ErrorCode.UnknownError, $"{e.Message}");
-        }
-
-        return result;
-
     }
 
+    private string GetJwtString(IdentityUser identityUser, UserProfile userProfile)
+    {
+        var claimsIdentity = new ClaimsIdentity(new Claim[]
+         {
+            new Claim(type: JwtRegisteredClaimNames.Sub, value: identityUser.Email),
+            new Claim(type: JwtRegisteredClaimNames.Jti, value: Guid.NewGuid().ToString()),
+            new Claim(type: JwtRegisteredClaimNames.Email, value: identityUser.Email),
+            new Claim(type: "IdentityId", value: identityUser.Id),
+            new Claim(type: "UserProfileId", value: userProfile.UserProfileId.ToString())
+         });
+
+        var token = _identityService.CreateSecurityToken(claimsIdentity);
+        return _identityService.WriteToken(token);
+    }
 }

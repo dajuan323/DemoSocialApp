@@ -1,6 +1,6 @@
 ﻿namespace DemoSocial.Api.Contracts.Identity;
 
-public class AuthenticationResult
+public record AuthenticationResult
 {
     public string Token { get; set; }
 }

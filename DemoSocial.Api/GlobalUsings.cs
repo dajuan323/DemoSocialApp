@@ -1,6 +1,9 @@
 ﻿global using Asp.Versioning;
 global using MediatR;
-global using DemoSocial.Application.Models;
+global using DemoSocial.Api.Contracts.UserProfile.Responses;
+global using DemoSocial.Application.UserProfiles.Commands;
+global using DemoSocial.Application.UserProfiles.Queries;
+global using Microsoft.AspNetCore.Authorization;
 global using DemoSocial.Domain.Aggregates.PostAggregate;
 global using System.ComponentModel.DataAnnotations;
 global using AutoMapper;
@@ -8,4 +11,31 @@ global using DemoSocial.Api.Contracts.Identity;
 global using DemoSocial.Api.Filters;
 global using Microsoft.AspNetCore.Mvc;
 global using DemoSocial.Application.Identity.Commands;
+global using DemoSocial.Api.Contracts.Common;
+global using Microsoft.AspNetCore.Mvc.Filters;
+global using DemoSocial.Api.Contracts.UserProfile.Requests;
+global using DemoSocial.Api.Contracts.Post.Requests;
+global using DemoSocial.Api.Contracts.Post.Responses;
+global using DemoSocial.Application.Posts.Commands;
+global using DemoSocial.Application.Posts.Queries;
+global using DemoSocial.Api.Registrars;
+global using DemoSocial.Domain.Aggregates.UserProfileAggregate;
+global using Asp.Versioning.ApiExplorer;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.Extensions.Options;
+global using Microsoft.OpenApi.Models;
+global using Swashbuckle.AspNetCore.SwaggerGen;
+global using DemoSocial.Application.Services;
+global using  Microsoft.Extensions.DependencyInjection;
+global using System.Reflection;
+global using DemoSocial.Persistence;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.EntityFrameworkCore;
+global using DemoSocial.Application.Options;
+global using Microsoft.IdentityModel.Tokens;
+global using System.Text;
+global using Asp.Versioning.Builder;
+global using DemoSocial.Api.Options;
+
+
 

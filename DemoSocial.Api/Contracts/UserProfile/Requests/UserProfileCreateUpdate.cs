@@ -2,7 +2,7 @@
 
 namespace DemoSocial.Api.Contracts.UserProfile.Requests;
 
-public sealed record UserProfileCreateUpdate
+public record UserProfileCreateUpdate
 {
     [Required]
     [MinLength(3)]

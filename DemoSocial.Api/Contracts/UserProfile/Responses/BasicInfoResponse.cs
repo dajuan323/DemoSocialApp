@@ -1,6 +1,6 @@
 ﻿namespace DemoSocial.Api.Contracts.UserProfile.Responses;
 
-public sealed record BasicInfoResponse
+public record BasicInfoResponse
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

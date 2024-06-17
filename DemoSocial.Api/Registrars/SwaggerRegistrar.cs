@@ -1,7 +1,4 @@
-﻿
-using DemoSocial.Api.Options;
-
-namespace DemoSocial.Api.Registrars
+﻿namespace DemoSocial.Api.Registrars
 {
     public class SwaggerRegistrar : IWebApplicationBuilderRegistrar
     {

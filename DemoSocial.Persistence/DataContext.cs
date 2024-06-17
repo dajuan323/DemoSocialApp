@@ -1,6 +1,7 @@
 ﻿using DemoSocial.Domain.Aggregates.PostAggregate;
 using DemoSocial.Domain.Aggregates.UserProfileAggregate;
 using DemoSocial.Persistence.Configurations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -26,9 +27,8 @@ public class DataContext : IdentityDbContext
         modelBuilder.ApplyConfiguration(new PostCommentConfig());
         modelBuilder.ApplyConfiguration(new PostInteractionConfig());
         modelBuilder.ApplyConfiguration(new UserProfileConfig());
-        modelBuilder.ApplyConfiguration(new IdentityUserLoginConfig());
+        modelBuilder.ApplyConfiguration(new IdentityUserConfig());
         modelBuilder.ApplyConfiguration(new IdentityUserRoleConfig());
         modelBuilder.ApplyConfiguration(new IdentityUserTokenConfig());
-        
     }
 }

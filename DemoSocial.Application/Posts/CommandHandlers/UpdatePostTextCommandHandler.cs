@@ -1,11 +1,10 @@
-﻿using DemoSocial.Application.Enums;
-using DemoSocial.Application.Models;
-using DemoSocial.Application.Posts.Commands;
+﻿using DemoSocial.Application.Posts.Commands;
 using DemoSocial.Domain.Aggregates.PostAggregate;
 using DemoSocial.Domain.Exceptions;
 using DemoSocial.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,57 +16,44 @@ namespace DemoSocial.Application.Posts.CommandHandlers;
 internal class UpdatePostTextCommandHandler(DataContext context) : IRequestHandler<UpdatePostTextCommand, OperationResult<Post>>
 {
     private readonly DataContext _context = context;
+    private OperationResult<Post> _result = new();
+    private readonly PostErrorMessages _errorMessages = new();
     public async Task<OperationResult<Post>> Handle(UpdatePostTextCommand request, CancellationToken cancellationToken)
     {
-        OperationResult<Post> result = new();
-
 		try
 		{
 			var post = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == request.PostId);
 
             if (post is null)
             {
-                result.IsError = true;
-                var error = new Error
-                {
-                    Code = ErrorCode.NotFound,
-                    Message = $"No post found with Id {request.PostId}"
-                };
-                result.Errors.Add(error);
-                return result;
+                _result.AddError(ErrorCode.NotFound, string.Format(
+                    _errorMessages.PostNotFound, request.PostId));
+                return _result;
             }
+                
 
-            post.UpdatePostText(request.NewText);
-            await _context.SaveChangesAsync();
-            result.Payload = post; 
+            if (post.UserProfileId != request.UserProfileId)
+            {
+                _result.AddError(ErrorCode.PostUpdateNotPossible, _errorMessages.PostUpdateNotPossible);
+                return _result;
+            }
+                
+            
 
+            post?.UpdatePostText(request.NewText);
+            await _context.SaveChangesAsync(cancellationToken);
+            _result.Payload = post; 
         }
 
         catch (PostNotValidException ex)
         {
-            result.IsError = true;
-            ex.ValidationErrors.ForEach(e =>
-            {
-                Error error = new()
-                {
-                    Code = ErrorCode.ValidationError,
-                    Message = $"{ex.Message}"
-                };
-                result.Errors.Add(error);
-            });
+            ex.ValidationErrors.ForEach(e => _result.AddError(ErrorCode.ValidationError, e));
         }
 
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Error error = new()
-            {
-                Code = ErrorCode.UnknownError,
-                Message = $"{e.Message}"
-            };
-            result.IsError = true;
-            result.Errors.Add(error);
+            _result.AddUnknownError($"{ex.Message}");
         }
-
-        return result;
+        return _result;
     }
 }

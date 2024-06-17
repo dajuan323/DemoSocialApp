@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DemoSocial.Api.Contracts.Identity
+﻿namespace DemoSocial.Api.Contracts.Identity
 {
     public record LoginContract
     {

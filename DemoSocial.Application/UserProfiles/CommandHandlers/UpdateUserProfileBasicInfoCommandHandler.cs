@@ -1,27 +1,17 @@
-﻿using DemoSocial.Application.Enums;
-using DemoSocial.Application.Models;
-using DemoSocial.Application.UserProfiles.Commands;
-using DemoSocial.Domain.Aggregates.UserProfileAggregate;
-using DemoSocial.Domain.Exceptions;
-using DemoSocial.Persistence;
-using MediatR;
+﻿using DemoSocial.Application.UserProfiles.Commands;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharedKernel;
+
 
 namespace DemoSocial.Application.UserProfiles.CommandHandlers
 {
     internal class UpdateUserProfileBasicInfoCommandHandler(DataContext context) : IRequestHandler<UpdateUserProfileBasicInfo, OperationResult<UserProfile>>
     {
         private readonly DataContext _context = context;
+        private OperationResult<UserProfile> _result;
 
         public async Task<OperationResult<UserProfile>> Handle(UpdateUserProfileBasicInfo request, CancellationToken cancellationToken)
         {
-            var result = new OperationResult<UserProfile>();
-
             try
             {
                 var userProfile = await _context.UserProfiles
@@ -29,14 +19,8 @@ namespace DemoSocial.Application.UserProfiles.CommandHandlers
 
                 if (userProfile == null)
                 {
-                    result.IsError = true;
-                    var error = new Error
-                    {
-                        Code = ErrorCode.NotFound,
-                        Message = $"No User Profile found with Id {request.UserProfileId}"
-                    };
-                    result.Errors.Add(error);
-                    return result;
+                    _result.AddError(ErrorCode.NotFound, "replace this");
+                    return _result;
                 }
 
                 var basicInfo = BasicInfo.CreateBasicInfo(
@@ -52,44 +36,19 @@ namespace DemoSocial.Application.UserProfiles.CommandHandlers
                 _context.UserProfiles.Update(userProfile);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                result.Payload = userProfile;
-                return result;
+                _result.Payload = userProfile;
             }
 
             catch (UserProfileNotValidException ex)
             {
-
-                result.IsError = true;
-                ex.ValidationErrors.ForEach(e =>
-                {
-                    Error error = new()
-                    {
-                        Code = ErrorCode.ValidationError,
-                        Message = $"{ex.Message}"
-
-                    };
-                    result.Errors.Add(error);
-
-                });
-
-                return result;
+                ex.ValidationErrors.ForEach(e => _result.AddError(ErrorCode.ValidationError, $"{ex.Message}"));
             }
 
             catch (Exception e)
             {
-
-                result.IsError = true;
-                var error = new Error
-                {
-                    Code = ErrorCode.ServerError,
-                    Message = e.Message
-                };
-                result.Errors.Add(error);
+                _result.AddUnknownError($"{e.Message}");
             }
-
-
-
-            return result;
+            return _result;
         }
     }
 }

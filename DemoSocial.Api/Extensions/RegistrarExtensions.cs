@@ -1,17 +1,23 @@
-﻿using DemoSocial.Api.Registrars;
-using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace DemoSocial.Api.Extensions;
+﻿namespace DemoSocial.Api.Extensions;
 
 public static class RegistrarExtensions
 {
     public static void RegisterServices(this WebApplicationBuilder builder, Type scanningType)
     {
-        var registrars = GetRegistrars<IWebApplicationBuilderRegistrar>(scanningType);
-
-        foreach (var registrar in registrars)
+        try
         {
-            registrar.RegisterServices(builder);
+            var registrars = GetRegistrars<IWebApplicationBuilderRegistrar>(scanningType);
+
+            foreach (var registrar in registrars)
+            {
+                registrar.RegisterServices(builder);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle or log the exception appropriately
+            Console.WriteLine($"An error occurred while registering services: {ex.Message}");
+            throw; // Rethrow the exception if needed
         }
     }
 
@@ -19,11 +25,21 @@ public static class RegistrarExtensions
 
     public static void RegisterPipelineComponents(this WebApplication app, Type scanningType)
     {
-        var registrars = GetRegistrars<IWebApplicationRegistrar>(scanningType);
-        foreach (var registrar in registrars)
+        try
         {
-            registrar.RegisterPipelineComponents(app);
+            var registrars = GetRegistrars<IWebApplicationRegistrar>(scanningType);
+            foreach (var registrar in registrars)
+            {
+                registrar.RegisterPipelineComponents(app);
+            }
         }
+        catch (Exception ex)
+        {
+            // Handle or log the exception appropriately
+            Console.WriteLine($"An error occurred while registering pipelines: {ex.Message}");
+            throw; // Rethrow the exception if needed
+        }
+        
 
     }
 

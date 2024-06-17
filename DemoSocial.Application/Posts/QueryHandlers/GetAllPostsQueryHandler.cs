@@ -1,10 +1,9 @@
-﻿using DemoSocial.Application.Enums;
-using DemoSocial.Application.Models;
-using DemoSocial.Application.Posts.Queries;
+﻿using DemoSocial.Application.Posts.Queries;
 using DemoSocial.Domain.Aggregates.PostAggregate;
 using DemoSocial.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,31 +15,27 @@ namespace DemoSocial.Application.Posts.QueryHandlers;
 internal class GetAllPostsQueryHandler : IRequestHandler<GetAllPostsQuery, OperationResult<List<Post>>>
 {
     private readonly DataContext _context;
+    private OperationResult<List<Post>> _result = new();
+    private readonly PostErrorMessages _errorMessages = new();
     public GetAllPostsQueryHandler(DataContext context) => _context = context;
     public async Task<OperationResult<List<Post>>> Handle(GetAllPostsQuery request, CancellationToken cancellationToken)
     {
-        OperationResult<List<Post>> result = new();
-
         try
         {
-            result.Payload = await _context.Posts.ToListAsync(cancellationToken);
+            var posts = await _context.Posts.ToListAsync(cancellationToken);
+            if (posts == null)
+            {
+                _result.AddError(ErrorCode.NotFound, _errorMessages.PostsNotAvaialble);
+                return _result;
+            }
+                
+            _result.Payload =  posts;
         }
+        
         catch (Exception ex)
 		{
-
-            Error error = new()
-            {
-                Code = ErrorCode.UnknownError,
-                Message = $"{ex.Message}"
-            };
-            result.IsError = true;
-            result.Errors.Add(error);
-            
+            _result.AddUnknownError($"{ex.Message}");
 		}
-
-        return result;
-
-
-
+        return _result;
     }
 }

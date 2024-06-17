@@ -8,8 +8,12 @@ public class IdentityController : BaseController
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
-    public IdentityController(IMediator mediator) => _mediator = mediator;
-    public IdentityController(Mapper mapper) => _mapper = mapper;
+    public IdentityController(IMapper mapper, IMediator mediator)
+    {
+        _mapper = mapper;
+        _mediator = mediator;
+    }
+
 
     [HttpPost]
     [Route(ApiRoutes.Identiy.Registration)]
@@ -19,10 +23,28 @@ public class IdentityController : BaseController
         var command = _mapper.Map<RegisterIdentityUserCommand>(newUser);
         var result = await _mediator.Send(command);
 
-        if (result.IsError) HandleErrorResponse(result.Errors);
+        if (result.IsError) return HandleErrorResponse(result.Errors);
 
         AuthenticationResult authenticationResult = new() {Token = result.Payload };
 
         return Ok(authenticationResult);
     }
+
+    [HttpPost]
+    [Route(ApiRoutes.Identiy.Login)]
+    [ValidateModel]
+    public async Task<IActionResult> Login(LoginContract login)
+    {
+        var command = _mapper.Map<LoginCommand>(login);
+        var result = await _mediator.Send(command);
+
+        if (result.IsError) return HandleErrorResponse(result.Errors);
+
+        AuthenticationResult authenticationResult = new() { Token = result.Payload };
+
+        return Ok(authenticationResult);
+    }
+
+
+
 }

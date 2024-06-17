@@ -1,9 +1,4 @@
-﻿
-using Asp.Versioning.Builder;
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
-
-namespace DemoSocial.Api.Registrars;
+﻿namespace DemoSocial.Api.Registrars;
 
 public class MvcWebAppRegistrar : IWebApplicationRegistrar
 {
@@ -21,6 +16,9 @@ public class MvcWebAppRegistrar : IWebApplicationRegistrar
                     description.ApiVersion.ToString());
             }
         });
+
+        app.UseCors("DemoSocialPolicy");
+
         app.UseHttpsRedirection();
 
         app.UseAuthentication();

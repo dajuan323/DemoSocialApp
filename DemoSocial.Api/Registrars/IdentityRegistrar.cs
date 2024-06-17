@@ -1,11 +1,4 @@
-﻿
-using DemoSocial.Application.Options;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
-namespace DemoSocial.Api.Registrars;
+﻿namespace DemoSocial.Api.Registrars;
 
 public class IdentityRegistrar : IWebApplicationBuilderRegistrar
 {
@@ -16,17 +9,7 @@ public class IdentityRegistrar : IWebApplicationBuilderRegistrar
 
         var jwtSection = builder.Configuration.GetSection(nameof(JwtSettings));
         builder.Services.Configure<JwtSettings>(jwtSection);
-        //builder.Services.AddIdentityCore<IdentityUser>();
-        builder.Services
-            .AddIdentity<IdentityOptions, IdentityRole>(options =>
-            {
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 5;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.ClaimsIdentity.UserIdClaimType = "IdentityId";
-            });
+       
         builder.Services.AddAuthentication(a =>
         {
             a.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -41,6 +24,7 @@ public class IdentityRegistrar : IWebApplicationBuilderRegistrar
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SigningKey)),
                 ValidateIssuer = true,
+                ValidIssuer = jwtSettings.Issuer,
                 ValidateAudience = true,
                 ValidAudiences = jwtSettings.Audiences,
                 RequireExpirationTime = false,

@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using DemoSocial.Application.Enums;
-using DemoSocial.Application.Models;
 using DemoSocial.Application.UserProfiles.Commands;
 using DemoSocial.Domain.Aggregates.UserProfileAggregate;
 using DemoSocial.Domain.Exceptions;
 using DemoSocial.Persistence;
 using MediatR;
+using SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +16,13 @@ namespace DemoSocial.Application.UserProfiles.CommandHandlers;
 internal class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, OperationResult<UserProfile>>
 {
     private readonly DataContext _context;
+    private OperationResult<UserProfile> _result = new();
+    private readonly UserProfileErrorMessages _errorMessages = new();
 
     public CreateUserCommandHandler(DataContext context) => _context = context;
 
     public async Task<OperationResult<UserProfile>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-
-        var result = new OperationResult<UserProfile>();
-
         try
         {
             var basicInfo = BasicInfo.CreateBasicInfo(
@@ -40,37 +38,20 @@ internal class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Ope
             _context.UserProfiles.Add(userProfile);
             await _context.SaveChangesAsync(cancellationToken);
 
-            result.Payload = userProfile;
+            _result.Payload = userProfile;
         }
 
         catch (UserProfileNotValidException ex)
         {
-
-            result.IsError = true;
-            ex.ValidationErrors.ForEach(e =>
-            {
-                Error error = new()
-                {
-                    Code = ErrorCode.ValidationError,
-                    Message = $"{ex.Message}"
-
-                };
-                result.Errors.Add(error);
-            });
+            ex.ValidationErrors.ForEach(e => _result.AddError(ErrorCode.ValidationError, e)); ;
         }
 
         catch (Exception e)
         {
-            Error error = new()
-            {
-                Code = ErrorCode.UnknownError,
-                Message = $"{e.Message}"
-            };
-            result.IsError = true;
-            result.Errors.Add(error);
+            _result.AddUnknownError($"{e.Message}");
         }
 
-        return result;
+        return _result;
     }
 }
 

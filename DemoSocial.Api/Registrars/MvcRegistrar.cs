@@ -8,11 +8,12 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
     {
+
         builder.Services.AddControllers(config =>
         {
             config.Filters.Add(typeof(DemoSocialExceptionHandler));
         });
-
+        builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddApiVersioning(opt =>
         {
@@ -30,6 +31,6 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
 
         
 
-        builder.Services.AddEndpointsApiExplorer();
+        
     }
 }

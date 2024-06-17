@@ -1,7 +1,4 @@
-﻿global using DemoSocial.Application.Abstractions;
-global using DemoSocial.Application.Enums;
-global using DemoSocial.Application.Identity.Commands;
-global using DemoSocial.Application.Models;
+﻿global using DemoSocial.Application.Identity.Commands;
 global using DemoSocial.Application.Options;
 global using DemoSocial.Domain.Aggregates.UserProfileAggregate;
 global using DemoSocial.Domain.Exceptions;
@@ -14,3 +11,4 @@ global using System.Security.Claims;
 global using System.Text;
 global using DemoSocial.Application.Posts.Commands;
 global using DemoSocial.Domain.Aggregates.PostAggregate;
+global using SharedKernel;
