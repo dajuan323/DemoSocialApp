@@ -21,12 +21,12 @@ internal class UpdatePostCommentCommandHandler(
 			if (post is null) 
                 _result.AddError(ErrorCode.NotFound, string.Format(_errorMessages.PostNotFound, request.PostId));
             
-			var postComment = post?.Comments.FirstOrDefault(pc => pc.CommentId == request.PostCommentId);
+			var postComment = post.Comments.FirstOrDefault(pc => pc.CommentId == request.PostCommentId);
 
 			if (postComment is null) 
                 _result.AddError(ErrorCode.NotFound, string.Format(_errorMessages.PostCommentNotFound, request.PostCommentId));
 
-            postComment?.UpdatePostComment(request.UpdatedText);
+            postComment.UpdatePostComment(request.UpdatedText);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			_result.Payload = postComment;
         }
