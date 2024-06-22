@@ -1,10 +1,14 @@
-﻿using SharedKernel;
+﻿using DemoSocial.Application.Abstractions;
+using SharedKernel;
 
 namespace DemoSocial.Application.Posts.CommandHandlers;
 
-internal class CreatePostCommandHandler(DataContext context) : IRequestHandler<CreatePostCommand, OperationResult<Post>>
+internal class CreatePostCommandHandler(
+    IDataContext context,
+    IUnitOfWork unitOfWork) : IRequestHandler<CreatePostCommand, OperationResult<Post>>
 {
-    private readonly DataContext _context = context;
+    private readonly IDataContext _context = context;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private OperationResult<Post> _result = new();
     public async Task<OperationResult<Post>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
@@ -13,7 +17,7 @@ internal class CreatePostCommandHandler(DataContext context) : IRequestHandler<C
             var post = Post.CreatePost(
                 request.UserProfileId, request.TextContent);
             _context.Posts.Add(post);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             _result.Payload = post;
         }

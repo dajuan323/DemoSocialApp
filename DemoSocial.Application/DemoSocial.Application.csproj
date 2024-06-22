@@ -13,17 +13,24 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DemoSocial.Domain\DemoSocial.Domain.csproj" />
-    <ProjectReference Include="..\DemoSocial.Persistence\DemoSocial.Persistence.csproj" />
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>Application.UnitTests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+
   <ItemGroup>
-    <Folder Include="Abstractions\" />
     <Folder Include="Enums\" />
     <Folder Include="Models\" />
   </ItemGroup>

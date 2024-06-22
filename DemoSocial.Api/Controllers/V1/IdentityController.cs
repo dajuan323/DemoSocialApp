@@ -45,6 +45,12 @@ public class IdentityController : BaseController
         return Ok(authenticationResult);
     }
 
-
+    [HttpDelete]
+    [Route(ApiRoutes.Identiy.IdRoute)]
+    [ValidateGuid("identityId")]
+    public async Task<IActionResult> Delete(string identityId)
+    {
+        return Ok();
+    }
 
 }

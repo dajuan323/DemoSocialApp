@@ -1,6 +1,5 @@
 ﻿using DemoSocial.Application.UserProfiles.Commands;
 using DemoSocial.Domain.Aggregates.UserProfileAggregate;
-using DemoSocial.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -12,15 +11,13 @@ using System.Threading.Tasks;
 
 namespace DemoSocial.Application.UserProfiles.CommandHandlers;
 
-internal class DeleteUserProfileCommandHandler : IRequestHandler<DeleteUserProfileCommad, OperationResult<UserProfile>>
+internal class DeleteUserProfileCommandHandler(
+    IDataContext context,
+    IUnitOfWork unitOfWork) : IRequestHandler<DeleteUserProfileCommad, OperationResult<UserProfile>>
 {
-    private readonly DataContext _context;
+    private readonly IDataContext _context = context;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private OperationResult<UserProfile> _result = new(); 
-
-    public DeleteUserProfileCommandHandler(DataContext context)
-    {
-        _context = context;
-    }
 
     public async Task<OperationResult<UserProfile>> Handle(DeleteUserProfileCommad request, CancellationToken cancellationToken)
     {
@@ -32,7 +29,7 @@ internal class DeleteUserProfileCommandHandler : IRequestHandler<DeleteUserProfi
             return _result;
         }
         _context.UserProfiles.Remove(userProfile);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _result.Payload = userProfile;
 

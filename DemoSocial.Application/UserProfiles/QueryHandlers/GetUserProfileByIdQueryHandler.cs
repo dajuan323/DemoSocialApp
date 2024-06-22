@@ -1,9 +1,7 @@
 ﻿using DemoSocial.Application.UserProfiles.Queries;
 using DemoSocial.Domain.Aggregates.UserProfileAggregate;
-using DemoSocial.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using SharedKernel;
 using System;
 using System.Collections.Generic;
@@ -16,12 +14,12 @@ namespace DemoSocial.Application.UserProfiles.QueryHandlers;
 
 internal class GetUserProfileByIdQueryHandler : IRequestHandler<GetUserProfileByIdQuery, OperationResult<UserProfile>>
 {
-    private readonly DataContext _context;
+    private readonly IDataContext _context;
     private OperationResult<UserProfile> _result = new();
     private readonly UserProfileErrorMessages _errorMessages = new();
     
     
-    public GetUserProfileByIdQueryHandler(DataContext context) => _context = context;
+    public GetUserProfileByIdQueryHandler(IDataContext context) => _context = context;
 
     public async Task<OperationResult<UserProfile>> Handle(GetUserProfileByIdQuery request, CancellationToken cancellationToken)
     {

@@ -4,21 +4,15 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DemoSocial.Application.Identity.CommandHandlers;
 
-internal class RegisterIdentityUserCommandHandler : IRequestHandler<RegisterIdentityUserCommand, OperationResult<string>>
+internal class RegisterIdentityUserCommandHandler(
+    IDataContext _context,
+    IUnitOfWork _unitOfWork,
+    IdentityService identityServicw,
+    UserManager<IdentityUser> _userManager) : IRequestHandler<RegisterIdentityUserCommand, OperationResult<string>>
 {
-    private readonly DataContext _context;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly IdentityService _identityService;
+    private readonly IdentityService _identityService = identityServicw;
     private OperationResult<string> _result = new();
     private readonly IdentityErrorMessages _errorMessages = new();
-
-    public RegisterIdentityUserCommandHandler(
-        DataContext context, UserManager<IdentityUser> userManager, IdentityService identityService)
-    {
-        _context = context;
-        _userManager = userManager;
-        _identityService = identityService;
-    }
 
     public async Task<OperationResult<string>> Handle(RegisterIdentityUserCommand request, CancellationToken cancellationToken)
     {
@@ -27,7 +21,7 @@ internal class RegisterIdentityUserCommandHandler : IRequestHandler<RegisterIden
             await ValidateIdentityDoesNotExist(request);
             if (_result.IsError) return _result;
 
-            await using var transaction = _context.Database.BeginTransaction();
+            await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
             var identity = await CreateIdentityUserAsync(request, transaction, cancellationToken);
             if (_result.IsError) return _result;
@@ -35,7 +29,7 @@ internal class RegisterIdentityUserCommandHandler : IRequestHandler<RegisterIden
             var profile = await CreateUserProfileAsync(identity, request, transaction, cancellationToken);
             if (_result.IsError) return _result;
 
-            await transaction.CommitAsync(cancellationToken);
+           transaction.Commit();
 
             _result.Payload = GetJwtString(identity, profile);
             return _result;
@@ -97,7 +91,7 @@ internal class RegisterIdentityUserCommandHandler : IRequestHandler<RegisterIden
             var profile = UserProfile.CreateUserProfile(identity.Id, profileInfo);
          
             _context.UserProfiles.Add(profile);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             return profile;
         }
         catch (Exception)

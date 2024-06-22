@@ -2,7 +2,6 @@
 using DemoSocial.Application.UserProfiles.Commands;
 using DemoSocial.Domain.Aggregates.UserProfileAggregate;
 using DemoSocial.Domain.Exceptions;
-using DemoSocial.Persistence;
 using MediatR;
 using SharedKernel;
 using System;
@@ -13,13 +12,14 @@ using System.Threading.Tasks;
 
 namespace DemoSocial.Application.UserProfiles.CommandHandlers;
 
-internal class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, OperationResult<UserProfile>>
+internal class CreateUserCommandHandler(
+    IDataContext context,
+    IUnitOfWork unitOfWork) : IRequestHandler<CreateUserCommand, OperationResult<UserProfile>>
 {
-    private readonly DataContext _context;
+    private readonly IDataContext _context = context;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private OperationResult<UserProfile> _result = new();
     private readonly UserProfileErrorMessages _errorMessages = new();
-
-    public CreateUserCommandHandler(DataContext context) => _context = context;
 
     public async Task<OperationResult<UserProfile>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
@@ -36,7 +36,7 @@ internal class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Ope
             var userProfile = UserProfile.CreateUserProfile(Guid.NewGuid().ToString(), basicInfo);
 
             _context.UserProfiles.Add(userProfile);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             _result.Payload = userProfile;
         }

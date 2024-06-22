@@ -1,6 +1,5 @@
 ﻿using DemoSocial.Application.Posts.Queries;
 using DemoSocial.Domain.Aggregates.PostAggregate;
-using DemoSocial.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -12,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace DemoSocial.Application.Posts.QueryHandlers;
 
-internal class GetAllPostCommentsQueryHandler(DataContext context) : IRequestHandler<GetAllPostCommentsQuery, OperationResult<List<PostComment>>>
+internal class GetAllPostCommentsQueryHandler(IDataContext context) : IRequestHandler<GetAllPostCommentsQuery, OperationResult<List<PostComment>>>
 {
-    private readonly DataContext _context = context;
+    private readonly IDataContext _context = context;
     private OperationResult<List<PostComment>> _result = new();
     private readonly PostErrorMessages _errorMessages = new();
     public async Task<OperationResult<List<PostComment>>> Handle(GetAllPostCommentsQuery request, CancellationToken cancellationToken)

@@ -1,35 +1,17 @@
-﻿using AutoMapper;
-using Azure.Core;
+﻿using DemoSocial.Application.Abstractions;
 using DemoSocial.Application.Services;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Options;
-using SharedKernel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DemoSocial.Application.Identity.CommandHandlers;
 
-internal class LoginCommandHandler : IRequestHandler<LoginCommand, OperationResult<string>>
+internal class LoginCommandHandler(
+    IDataContext _context,
+    IdentityService _identityService,
+    UserManager<IdentityUser> _userManager) : IRequestHandler<LoginCommand, OperationResult<string>>
 {
-    private readonly DataContext _context;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly IdentityService _identityService;
     private OperationResult<string> _result = new();
     private readonly IdentityErrorMessages _errorMessages = new();
-
-    public LoginCommandHandler(DataContext context, UserManager<IdentityUser> userManager,  IdentityService identityService)
-    {
-        _context = context;
-        _userManager = userManager;
-        _identityService = identityService;
-    }
 
     public async Task<OperationResult<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {

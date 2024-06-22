@@ -5,9 +5,12 @@ using SharedKernel;
 
 namespace DemoSocial.Application.UserProfiles.CommandHandlers
 {
-    internal class UpdateUserProfileBasicInfoCommandHandler(DataContext context) : IRequestHandler<UpdateUserProfileBasicInfo, OperationResult<UserProfile>>
+    internal class UpdateUserProfileBasicInfoCommandHandler(
+        IDataContext context,
+        IUnitOfWork unitOfWork) : IRequestHandler<UpdateUserProfileBasicInfo, OperationResult<UserProfile>>
     {
-        private readonly DataContext _context = context;
+        private readonly IDataContext _context = context;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private OperationResult<UserProfile> _result;
 
         public async Task<OperationResult<UserProfile>> Handle(UpdateUserProfileBasicInfo request, CancellationToken cancellationToken)
@@ -34,7 +37,7 @@ namespace DemoSocial.Application.UserProfiles.CommandHandlers
                 userProfile.UpdateBasicInfo(basicInfo);
 
                 _context.UserProfiles.Update(userProfile);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 _result.Payload = userProfile;
             }

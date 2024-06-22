@@ -13,6 +13,5 @@ internal class BasicInfoConfig : IEntityTypeConfiguration<BasicInfo>
 {
     public void Configure(EntityTypeBuilder<BasicInfo> builder)
     {
-        throw new NotImplementedException();
     }
 }

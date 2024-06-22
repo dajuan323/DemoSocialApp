@@ -2,7 +2,7 @@
 global using DemoSocial.Application.Options;
 global using DemoSocial.Domain.Aggregates.UserProfileAggregate;
 global using DemoSocial.Domain.Exceptions;
-global using DemoSocial.Persistence;
+global using DemoSocial.Application.Abstractions;
 global using MediatR;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.IdentityModel.Tokens;

@@ -5,8 +5,9 @@ using Microsoft.EntityFrameworkCore;
 namespace DemoSocial.Application.Identity.CommandHandlers;
 
 internal sealed class RemoveIdentityCommandHandler(
-    DataContext _context
-) : IRequestHandler<RemoveIdentityCommand, OperationResult<bool>>
+    IDataContext _context,
+    IUnitOfWork _unitOfWork,
+    UserManager<IdentityUser> _userManager) : IRequestHandler<RemoveIdentityCommand, OperationResult<bool>>
 {
     OperationResult<bool> _result = new();
     IdentityErrorMessages _identityErrorMessages = new();
@@ -17,7 +18,7 @@ internal sealed class RemoveIdentityCommandHandler(
 
         try
         {
-            IdentityUser user = await _context.Users.FirstOrDefaultAsync(
+            IdentityUser user = await _userManager.Users.FirstOrDefaultAsync(
             u => u.Id == request.IdentityUserId.ToString(), cancellationToken);
 
             if (user == null)
@@ -44,8 +45,8 @@ internal sealed class RemoveIdentityCommandHandler(
             }
 
             _context.UserProfiles.Remove(profile);
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _userManager.DeleteAsync(user);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             _result.Payload = true;
         }

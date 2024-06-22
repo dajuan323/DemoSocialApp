@@ -5,13 +5,16 @@ using System.Runtime.CompilerServices;
 namespace DemoSocial.Application.Posts.CommandHandlers;
 
 internal sealed class RemoveCommentCommandHandler(
-    DataContext context) : IRequestHandler<RemoveCommentCommand, OperationResult<PostComment>>
+    IDataContext context,
+    IUnitOfWork unitOfWork) : IRequestHandler<RemoveCommentCommand, OperationResult<PostComment>>
 {
+    private readonly IDataContext _context = context;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly OperationResult<PostComment> _result = new();
     PostErrorMessages _errorMessages = new();
     public async Task<OperationResult<PostComment>> Handle(RemoveCommentCommand request, CancellationToken cancellationToken)
     {
-        var post = await context.Posts
+        var post = await _context.Posts
             .Include(p => p.Comments)
             .FirstOrDefaultAsync(p => p.PostId == request.PostId);
         if (post == null)
@@ -38,8 +41,8 @@ internal sealed class RemoveCommentCommandHandler(
         }
 
         post.RemoveComment(comment);
-        context.Posts.Update(post);
-        await context.SaveChangesAsync(cancellationToken);
+        _context.Posts.Update(post);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         _result.Payload = comment;
         return _result;
     }

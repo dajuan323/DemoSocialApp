@@ -1,20 +1,19 @@
 ﻿
+using DemoSocial.Application.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 
 namespace DemoSocial.Application.Posts.CommandHandlers;
 
-internal class AddCommentToPostCommandHandler : IRequestHandler<AddCommentToPostCommand, OperationResult<PostComment>>
+internal class AddCommentToPostCommandHandler(
+    IDataContext context,
+    IUnitOfWork unitOfWork) : IRequestHandler<AddCommentToPostCommand, OperationResult<PostComment>>
 {
-    private readonly DataContext _context;
+    private readonly IDataContext _context = context;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private OperationResult<PostComment> _result = new();
     private PostErrorMessages _errorMessages = new();
-
-    public AddCommentToPostCommandHandler(DataContext context)
-    {
-        _context = context;
-    }
 
     public async Task<OperationResult<PostComment>> Handle(AddCommentToPostCommand request, CancellationToken cancellationToken)
     {
@@ -31,7 +30,7 @@ internal class AddCommentToPostCommandHandler : IRequestHandler<AddCommentToPost
             post.AddPostComment(comment);
 
             _context.Posts.Update(post);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             _result.Payload = comment;
         }
 

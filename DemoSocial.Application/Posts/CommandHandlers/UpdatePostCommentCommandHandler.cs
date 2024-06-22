@@ -4,9 +4,12 @@ using SharedKernel;
 
 namespace DemoSocial.Application.Posts.CommandHandlers;
 
-internal class UpdatePostCommentCommandHandler(DataContext context) : IRequestHandler<UpdatePostCommentCommand, OperationResult<PostComment>>
+internal class UpdatePostCommentCommandHandler(
+    IDataContext context,
+    IUnitOfWork unitOfWork) : IRequestHandler<UpdatePostCommentCommand, OperationResult<PostComment>>
 {
-    private readonly DataContext _context = context;
+    private readonly IDataContext _context = context;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private OperationResult<PostComment> _result;
     private readonly PostErrorMessages _errorMessages = new();
     public async Task<OperationResult<PostComment>> Handle(UpdatePostCommentCommand request, CancellationToken cancellationToken)
@@ -24,7 +27,7 @@ internal class UpdatePostCommentCommandHandler(DataContext context) : IRequestHa
                 _result.AddError(ErrorCode.NotFound, string.Format(_errorMessages.PostCommentNotFound, request.PostCommentId));
 
             postComment?.UpdatePostComment(request.UpdatedText);
-			await _context.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			_result.Payload = postComment;
         }
 

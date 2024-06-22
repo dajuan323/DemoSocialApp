@@ -1,7 +1,6 @@
 ﻿using DemoSocial.Application.Posts.Commands;
 using DemoSocial.Domain.Aggregates.PostAggregate;
 using DemoSocial.Domain.Exceptions;
-using DemoSocial.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -13,9 +12,12 @@ using System.Threading.Tasks;
 
 namespace DemoSocial.Application.Posts.CommandHandlers;
 
-internal class UpdatePostTextCommandHandler(DataContext context) : IRequestHandler<UpdatePostTextCommand, OperationResult<Post>>
+internal class UpdatePostTextCommandHandler(
+    IDataContext context,
+    IUnitOfWork unitOfWork) : IRequestHandler<UpdatePostTextCommand, OperationResult<Post>>
 {
-    private readonly DataContext _context = context;
+    private readonly IDataContext _context = context;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private OperationResult<Post> _result = new();
     private readonly PostErrorMessages _errorMessages = new();
     public async Task<OperationResult<Post>> Handle(UpdatePostTextCommand request, CancellationToken cancellationToken)
@@ -41,7 +43,7 @@ internal class UpdatePostTextCommandHandler(DataContext context) : IRequestHandl
             
 
             post?.UpdatePostText(request.NewText);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             _result.Payload = post; 
         }
 

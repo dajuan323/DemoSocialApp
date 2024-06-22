@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DemoSocial.Application\DemoSocial.Application.csproj" />
     <ProjectReference Include="..\DemoSocial.Domain\DemoSocial.Domain.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using DemoSocial.Domain.Aggregates.PostAggregate;
+﻿using DemoSocial.Application.Abstractions;
+using DemoSocial.Domain.Aggregates.PostAggregate;
 using DemoSocial.Domain.Aggregates.UserProfileAggregate;
 using DemoSocial.Persistence.Configurations;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DemoSocial.Persistence;
 
-public class DataContext : IdentityDbContext
+public class DataContext : IdentityDbContext, IDataContext
 {
     public DataContext(DbContextOptions options) : base(options)
     {
