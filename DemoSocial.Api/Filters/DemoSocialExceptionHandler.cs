@@ -7,7 +7,7 @@ public class DemoSocialExceptionHandler : ExceptionFilterAttribute
     {
         var apiError = new ErrorResponse
         {
-            StatusCode = 404,
+            StatusCode = 500,
             StatusPhrase = "Internal Server Error",
             Timestamp = DateTime.Now,
             Errors = {context.Exception.Message}

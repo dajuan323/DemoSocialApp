@@ -2,11 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DemoSocial.Application.Services;
 
@@ -39,6 +35,7 @@ public class IdentityService
     {
         return new SecurityTokenDescriptor()
         {
+            Subject = identity,
             Expires = DateTime.Now.AddHours(2),
             NotBefore = DateTime.Now,
             Audience = _jwtSettings.Audiences[0],

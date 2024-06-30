@@ -1,8 +1,12 @@
-﻿namespace DemoSocial.Api.Controllers.V1;
+﻿using DemoSocial.Api.Extensions;
+using SharedKernel;
+
+namespace DemoSocial.Api.Controllers.V1;
 
 [ApiVersion("1.0")]
 [Route(ApiRoutes.BaseRoute)]
 [ApiController]
+[Authorize( AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class PostsController : BaseController
 {
     private readonly IMediator _mediator;
@@ -13,6 +17,9 @@ public class PostsController : BaseController
         _mediator = mediator;
         _mapper = mapper;
     }
+
+
+    // Post
 
     [HttpGet]
     //[Authorize]
@@ -78,6 +85,9 @@ public class PostsController : BaseController
         return result.IsError ? HandleErrorResponse(result.Errors) : NoContent();
     }
 
+
+    // Post Comments
+
     [HttpGet]
     [Route(template:ApiRoutes.Posts.PostComments)]
     [ValidateGuid("postId")]
@@ -135,15 +145,72 @@ public class PostsController : BaseController
     [ValidateModel]
     public async Task<IActionResult> UpdatePostComment(string postId, string commentId, [FromBody] PostCommentUpdate updatedComment)
     {
-        var command = new UpdatePostCommentCommand
+        UpdatePostCommentCommand command = new UpdatePostCommentCommand
         (
             PostId : Guid.Parse(postId),
             PostCommentId: Guid.Parse(commentId),
             UpdatedText: updatedComment.Text
         );
-        var result = await _mediator.Send(command);
+        OperationResult<PostComment> result = await _mediator.Send(command);
 
         return result.IsError ? HandleErrorResponse(result.Errors) : NoContent();
+    }
+
+    [HttpGet]
+    [Route(ApiRoutes.Posts.PostInteractions)]
+    [ValidateGuid("postId")]
+    public async Task<IActionResult> GetPostInteractions(string postId, CancellationToken cancellation)
+    {
+        Guid postGuid = Guid.Parse(postId);
+        GetPostInteractionsQuery query = new(PostId: postGuid);
+        OperationResult<List<PostInteraction>> result = await _mediator.Send(query, cancellation);
+
+        return result.IsError ? HandleErrorResponse(result.Errors)
+            : Ok(_mapper.Map<List<PostInteractionResponse>>(result.Payload));
+
+    }
+
+
+    // Post Interactions
+
+    [HttpPost]
+    [Route(ApiRoutes.Posts.PostInteractions)]
+    [ValidateGuid("postId")]
+    [ValidateModel]
+    public async Task<IActionResult> AddPostInteraction(string postId, PostInteractionCreateContract interaction,
+            CancellationToken _)
+    {
+        Guid postGuid = Guid.Parse(postId);
+        Guid userProfileId = HttpContext.GetUserProfileIdByClaimValue();
+        AddInteraction command = new(
+            PostId: postGuid,
+            UserProfileId: userProfileId,
+            InteractionType: interaction.InteractionType);
+
+        OperationResult<PostInteraction> result = await _mediator.Send(command, _);
+
+        return result.IsError ? HandleErrorResponse(result.Errors)
+            : Ok(_mapper.Map<PostInteractionResponse>(result.Payload));
+    }
+
+    [HttpDelete]
+    [Route(ApiRoutes.Posts.InteractionById)]
+    [ValidateGuid("postId", "interactionId")]
+    public async Task<IActionResult> RemoveInteraction(string postId, string interactionId,
+        CancellationToken token)
+    {
+        Guid postGuid = Guid.Parse(postId);
+        Guid interaactionGuid = Guid.Parse(interactionId);
+        Guid userProfileGuid = HttpContext.GetUserProfileIdByClaimValue();
+        DeleteInteractionCommand command = new(
+            PostId: postGuid, 
+            InteractionId: interaactionGuid,
+            UserProfileId: userProfileGuid);
+        
+        OperationResult<PostInteraction> result = await _mediator.Send(command, token);
+        
+        return result.IsError ? HandleErrorResponse(result.Errors) : 
+            Ok(_mapper.Map<PostInteractionResponse>(result.Payload));
     }
 
     //[HttpDelete]

@@ -4,9 +4,16 @@ public class UserProfileMappings : Profile
 {
     public UserProfileMappings()
     {
-        CreateMap<UserProfileCreateUpdate, CreateUserCommand>();
         CreateMap<UserProfileCreateUpdate, UpdateUserProfileBasicInfo>();
         CreateMap<UserProfile, UserProfileResponse>();
         CreateMap<BasicInfo, BasicInfoResponse>();
+        CreateMap<UserProfile, InteractionUser>()
+            .ForMember(dest
+            => dest.FullName, opt
+            => opt.MapFrom(src
+            => src.BasicInfo.FirstName + " " + src.BasicInfo.LastName))
+            .ForMember(dest
+            => dest.City, opt
+            => opt.MapFrom(src => src.BasicInfo.CurrentCity));
     }
 }

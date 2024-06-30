@@ -2,25 +2,50 @@
 
 public class ValidateGuidAttribute : ActionFilterAttribute
 {
-    private readonly string _key;
+    private readonly List<string> _keys;
 
-    public ValidateGuidAttribute(string key) => _key = key;
+    public ValidateGuidAttribute(string key)
+    {
+        _keys = new List<string>();
+        _keys.Add(key);
+    }
+
+    public ValidateGuidAttribute(string key1, string key2)
+    {
+        _keys = new List<string>();
+        _keys.Add(key1);
+        _keys.Add(key2);
+    }
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        if (!context.ActionArguments.TryGetValue(_key, out var value) ||
-                Guid.TryParse(value?.ToString(), out Guid guid)) return;
-
-        var apiError = new ErrorResponse
+        bool hasError = false;
+        var apiError = new ErrorResponse();
+        _keys.ForEach(k =>
         {
-            StatusCode = 400,
-            StatusPhrase = "Bad Request",
-            Timestamp = DateTime.Now,
-            Errors = { $"The identifier for {_key} is not in correct GUID format" }
-        };
 
-        context.Result = new ObjectResult(apiError);
+            if (!context.ActionArguments.TryGetValue(k, out var value) ||
+                !Guid.TryParse(value?.ToString(), out Guid guid))
+            {
+                hasError = true;
+                apiError.Errors.Add($"The identifier for {k} is not in correct GUID format");
 
+            }
+
+
+
+        });
+
+        if (hasError)
+        {
+
+            apiError.StatusCode = 400;
+            apiError.StatusPhrase = "Bad Request";
+            apiError.Timestamp = DateTime.Now;
+            
+
+            context.Result = new ObjectResult(apiError);
+        }
 
 
     }

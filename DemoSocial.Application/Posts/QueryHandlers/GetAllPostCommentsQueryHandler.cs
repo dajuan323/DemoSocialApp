@@ -15,7 +15,7 @@ internal class GetAllPostCommentsQueryHandler(IDataContext context) : IRequestHa
 {
     private readonly IDataContext _context = context;
     private OperationResult<List<PostComment>> _result = new();
-    private readonly PostErrorMessages _errorMessages = new();
+    private readonly PostErrorMessages _errorMessages;
     public async Task<OperationResult<List<PostComment>>> Handle(GetAllPostCommentsQuery request, CancellationToken cancellationToken)
     {
         OperationResult<List<PostComment>> result = new();

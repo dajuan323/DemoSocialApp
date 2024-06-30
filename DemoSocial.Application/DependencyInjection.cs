@@ -1,4 +1,5 @@
-﻿using DemoSocial.Application.Services;
+﻿using DemoSocial.Application.Posts;
+using DemoSocial.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ public static class DependencyInjection
         var assembly = typeof(DependencyInjection).Assembly;
 
         services.AddSingleton<IdentityService>();
+
+        services.AddSingleton<PostErrorMessages>();
 
         return services;
     

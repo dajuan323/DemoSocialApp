@@ -11,7 +11,7 @@ internal sealed class RemoveCommentCommandHandler(
     private readonly IDataContext _context = context;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly OperationResult<PostComment> _result = new();
-    PostErrorMessages _errorMessages = new();
+    PostErrorMessages _errorMessages;
     public async Task<OperationResult<PostComment>> Handle(RemoveCommentCommand request, CancellationToken cancellationToken)
     {
         var post = await _context.Posts

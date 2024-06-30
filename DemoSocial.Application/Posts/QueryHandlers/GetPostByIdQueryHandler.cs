@@ -16,7 +16,7 @@ internal class GetPostByIdQueryHandler : IRequestHandler<GetPostByIdQuery, Opera
 {
     private readonly IDataContext _context;
     private OperationResult<Post> _result = new();
-    private readonly PostErrorMessages _errorMessages = new();
+    private readonly PostErrorMessages _errorMessages;
     public GetPostByIdQueryHandler(IDataContext context) => _context = context;
     public async Task<OperationResult<Post>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
     {

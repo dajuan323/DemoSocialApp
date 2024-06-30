@@ -15,7 +15,7 @@ internal class GetAllPostsQueryHandler : IRequestHandler<GetAllPostsQuery, Opera
 {
     private readonly IDataContext _context;
     private OperationResult<List<Post>> _result = new();
-    private readonly PostErrorMessages _errorMessages = new();
+    private readonly PostErrorMessages _errorMessages;
     public GetAllPostsQueryHandler(IDataContext context) => _context = context;
     public async Task<OperationResult<List<Post>>> Handle(GetAllPostsQuery request, CancellationToken cancellationToken)
     {

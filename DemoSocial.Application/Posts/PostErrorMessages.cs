@@ -17,4 +17,8 @@ public record PostErrorMessages
     public string PostUpdateNotPossible = "Post update not possible.  Invalid post owner.";
 
     public string CommentUpdateNotAuthorized = "Comment update not authorized.";
+
+    public string InteractionsNotFound = "Interaction not found.";
+
+    public string RemovalNotAuthorized = "Removal not authorized.  Invalid user.";
 }

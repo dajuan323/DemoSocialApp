@@ -1,4 +1,6 @@
-﻿namespace DemoSocial.Api.Controllers.V1;
+﻿using DemoSocial.Api.Extensions;
+
+namespace DemoSocial.Api.Controllers.V1;
 
 [ApiController]
 [ApiVersion("1.0")]
@@ -46,11 +48,20 @@ public class IdentityController : BaseController
     }
 
     [HttpDelete]
-    [Route(ApiRoutes.Identiy.IdRoute)]
-    [ValidateGuid("identityId")]
-    public async Task<IActionResult> Delete(string identityId)
+    [Route(ApiRoutes.Identiy.IdentityById)]
+    [ValidateGuid("identityUserId")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> Delete(string identityUserId, CancellationToken cancellation)
     {
-        return Ok();
+        Guid identityUserGuid = Guid.Parse(identityUserId);
+        Guid requestorGuid = HttpContext.GetIdentityIdClaimValue();
+        RemoveIdentityCommand command = new(
+            IdentityUserId: identityUserGuid,
+            RequestorGuid: requestorGuid);
+        var result = await _mediator.Send(command, cancellation);
+
+        return result.IsError? HandleErrorResponse(result.Errors) :
+            Ok();
     }
 
 }

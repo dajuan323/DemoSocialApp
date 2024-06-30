@@ -13,7 +13,7 @@ internal class AddCommentToPostCommandHandler(
     private readonly IDataContext _context = context;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private OperationResult<PostComment> _result = new();
-    private PostErrorMessages _errorMessages = new();
+    private PostErrorMessages _errorMessages;
 
     public async Task<OperationResult<PostComment>> Handle(AddCommentToPostCommand request, CancellationToken cancellationToken)
     {

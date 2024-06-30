@@ -20,7 +20,7 @@ internal class DeletePostCommandHandler(
     private readonly IDataContext _context = context;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private OperationResult<Post> _result = new();
-    private readonly PostErrorMessages _errorMessages = new();
+    private readonly PostErrorMessages _errorMessages;
     public async Task<OperationResult<Post>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
         

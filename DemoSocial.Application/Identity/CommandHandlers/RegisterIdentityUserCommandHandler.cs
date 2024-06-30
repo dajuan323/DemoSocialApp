@@ -105,11 +105,11 @@ internal class RegisterIdentityUserCommandHandler(
     {
         var claimsIdentity = new ClaimsIdentity(new Claim[]
          {
-            new Claim(type: JwtRegisteredClaimNames.Sub, value: identityUser.Email),
-            new Claim(type: JwtRegisteredClaimNames.Jti, value: Guid.NewGuid().ToString()),
-            new Claim(type: JwtRegisteredClaimNames.Email, value: identityUser.Email),
-            new Claim(type: "IdentityId", value: identityUser.Id),
-            new Claim(type: "UserProfileId", value: userProfile.UserProfileId.ToString())
+            new(type: JwtRegisteredClaimNames.Sub, value: identityUser.Email),
+            new(type: JwtRegisteredClaimNames.Jti, value: Guid.NewGuid().ToString()),
+            new(type: JwtRegisteredClaimNames.Email, value: identityUser.Email),
+            new(type: "IdentityId", value: identityUser.Id),
+            new(type: "UserProfileId", value: userProfile.UserProfileId.ToString())
          });
 
         var token = _identityService.CreateSecurityToken(claimsIdentity);

@@ -11,7 +11,7 @@ internal class UpdatePostCommentCommandHandler(
     private readonly IDataContext _context = context;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private OperationResult<PostComment> _result;
-    private readonly PostErrorMessages _errorMessages = new();
+    private readonly PostErrorMessages _errorMessages;
     public async Task<OperationResult<PostComment>> Handle(UpdatePostCommentCommand request, CancellationToken cancellationToken)
     {
 		try
