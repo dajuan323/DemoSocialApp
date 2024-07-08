@@ -9,7 +9,7 @@ public class CorsRegistrar : IWebApplicationBuilderRegistrar
             options.AddPolicy("DemoSocialPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
-                       .WithOrigins("http://localhost:3000")
+                       .WithOrigins("https://demo-social-api.azurewebsites.net/")
                        .AllowAnyMethod()
                        .AllowAnyHeader()
                        .AllowCredentials();
