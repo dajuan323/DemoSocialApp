@@ -8,7 +8,7 @@ public class CorsRegistrar : IWebApplicationBuilderRegistrar
         builder.Services.AddCors(options =>
             options.AddPolicy("DemoSocialPolicy", builder =>
             {
-                builder.AllowAnyOrigin()
+                builder.WithOrigins("https://localhost:7279", "https://demo-social-api.azurewebsites.net")
                        .AllowAnyMethod()
                        .AllowAnyHeader()
                        .AllowCredentials();
