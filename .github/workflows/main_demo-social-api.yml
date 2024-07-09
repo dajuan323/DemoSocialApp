@@ -4,10 +4,14 @@
 name: Build and deploy ASP.Net Core app to Azure Web App - demo-social-api
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: demo-social-api
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
 
 jobs:
   build:
@@ -30,7 +34,7 @@ jobs:
         run: dotnet build ./DemoSocialApp.sln --configuration Release --no-restore
 
       - name: dotnet publish
-        run: dotnet publish ./DemoSocialApp.sln -c Release --no-build -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ./DemoSocialApp.sln -c Release --no-build -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -55,7 +59,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'demo-social-api'
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'Production'
-          package: .
+          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CF95D1F6842E40A4ADC6F9C17E57BC5B }}
