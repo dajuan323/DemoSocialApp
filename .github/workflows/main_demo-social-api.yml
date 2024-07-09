@@ -34,7 +34,7 @@ jobs:
         run: dotnet build ./DemoSocialApp.sln --configuration Release --no-restore
 
       - name: dotnet publish
-        run: dotnet publish ./DemoSocialApp.sln -c Release --no-build -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+        run: dotnet publish ./DemoSocialApp.sln -c Release --no-build -o -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -61,5 +61,5 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'Production'
-          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CF95D1F6842E40A4ADC6F9C17E57BC5B }}
