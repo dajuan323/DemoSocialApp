@@ -46,6 +46,7 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
         return info;
     }
 
+    // JwtSecurityScheme
     private OpenApiSecurityScheme GetJwtSecurityScheme()
     {
         return new OpenApiSecurityScheme
