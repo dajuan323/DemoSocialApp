@@ -2,6 +2,8 @@
 
 DemoSocial is a backend application built using .NET that follows Clean Architecture principles with CQRS (Command Query Responsibility Segregation) pattern.
 
+![Clean Architecture](https://www.example.com/clean_architecture_diagram.png)
+
 ## Features
 
 - **Clean Architecture:** Organized into distinct layers with clear separation of concerns, promoting maintainability and testability.
@@ -18,15 +20,11 @@ DemoSocial is a backend application built using .NET that follows Clean Architec
 
 ## Technologies Used
 
-- **.NET Core**: Framework for building cross-platform applications.
-  
-- **C#**: Primary programming language for implementing backend logic.
-
-- **ASP.NET Core**: Framework for building APIs and web applications.
-
-- **Entity Framework Core**: ORM for database operations.
-
-- **MediatR**: Lightweight library for implementing Mediator pattern.
+- ![.NET Core](https://img.shields.io/badge/.NET%20Core-3.1-blue)
+- ![C#](https://img.shields.io/badge/C%23-8.0-brightgreen)
+- ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-3.1-blueviolet)
+- ![Entity Framework Core](https://img.shields.io/badge/Entity%20Framework%20Core-3.1-orange)
+- ![MediatR](https://img.shields.io/badge/MediatR-9.0-yellowgreen)
 
 ## Project Structure
 
